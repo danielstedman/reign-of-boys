@@ -31,7 +31,8 @@ const Deploy = {
     // Initialize unit selection UI
     initUnitSelectionUI: function() {
         const unitRoster = document.getElementById('unit-roster');
-        unitRoster.innerHTML = '<h4>Select Units to Deploy</h4>';
+        const points = GameState.points[GameState.currentPlayer];
+        unitRoster.innerHTML = `<h4>Select Units to Deploy</h4><div class="points-remaining">Points Remaining: <span id='points-remaining-value'>${points}</span></div>`;
         
         // Get units for current faction
         const factionUnits = Units.getUnitsByFaction(GameState.currentPlayer);
@@ -56,9 +57,11 @@ const Deploy = {
                     ${spritePath ? `<img src="${spritePath}" alt="${unitType.type}" class="unit-sprite">` : unitType.icon || unitType.type[0]}
                 </div>
                 <div class="unit-info">
-                    <div class="unit-name">${unitType.type}</div>
-                    <div class="unit-cost">Cost: ${unitType.cost} pts</div>
-                    <button class="expand-toggle" aria-label="Show more info">&#x25BC;</button>
+                    <div class="unit-header-row">
+                        <span class="unit-name">${unitType.type}</span>
+                        <span class="unit-cost">Cost: ${unitType.cost} pts</span>
+                        <button class="expand-toggle" aria-label="Show more info">&#x25BC;</button>
+                    </div>
                     <div class="unit-details" style="display:none">
                         <div class="unit-stats">
                             HP: ${unitType.health} | ATK: ${unitType.attack} | DEF: ${unitType.defense || 0} | SPD: ${unitType.moveSpeed}
@@ -149,6 +152,9 @@ const Deploy = {
             // Update battle log
             UI.battleLog.addEntry(`Deployed ${unit.type} at position (${x}, ${y}). ${GameState.points[GameState.currentPlayer]} points remaining.`);
             
+            // Update points remaining in UI
+            this.updatePointsRemaining();
+            
             return true;
         }
         
@@ -169,6 +175,7 @@ const Deploy = {
                 
                 // Update unit selection UI for new faction
                 this.initUnitSelectionUI();
+                this.updatePointsRemaining();
             } else {
                 console.log("Local 2-player: Both players deployed, starting battle phase");
                 // Both players have deployed, start battle
@@ -184,6 +191,7 @@ const Deploy = {
             // Start battle
             GameState.phase = 'battle';
             Battle.startBattle();
+            this.updatePointsRemaining();
         }
     },
     
@@ -233,6 +241,7 @@ const Deploy = {
         
         UI.battleLog.addEntry(`AI deployment complete. ${pointsRemaining} points remaining.`);
         GameState.currentPlayer = 'Crown'; // Switch back to player
+        this.updatePointsRemaining();
     },
     
     // Select random unit type weighted by cost
@@ -293,5 +302,11 @@ const Deploy = {
             
             unitRoster.appendChild(unitElement);
         });
+    },
+
+    // Helper to update points remaining in the UI
+    updatePointsRemaining: function() {
+        const el = document.getElementById('points-remaining-value');
+        if (el) el.textContent = GameState.points[GameState.currentPlayer];
     }
 };

@@ -1039,3 +1039,35 @@ body {
     border-color: #ffcc00;
     box-shadow: 0 0 20px rgba(139, 0, 0, 0.3);
 }
+
+.unit-header-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 2px;
+}
+.unit-header-row .unit-name {
+  font-weight: bold;
+  color: #fff;
+  margin-right: 6px;
+}
+.unit-header-row .unit-cost {
+  color: #ffcc00;
+  font-size: 0.95em;
+  margin-right: 6px;
+}
+.unit-header-row .expand-toggle {
+  margin-left: auto;
+  padding: 0 4px;
+}
+
+.points-remaining {
+  font-size: 1em;
+  color: #ffcc00;
+  margin-bottom: 8px;
+  font-weight: bold;
+  text-align: left;
+}
+#points-remaining-value {
+  color: #fff;
+}

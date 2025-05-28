@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reign of Boys</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Welcome Screen -->
+    <div id="welcome-screen" class="screen">
+        <h1 class="game-title">REIGN OF BOYS</h1>
+        <div class="version-info">v0.8 — Mutual Annihilation Patch</div>
+        
+        <div class="menu-buttons">
+            <button id="single-player" class="pixel-button">Single Player</button>
+            <button id="local-multiplayer" class="pixel-button">Local 2-Player</button>
+            <button id="remote-multiplayer" class="pixel-button">Remote 2-Player</button>
+        </div>
+        
+        <div class="animation-area">
+            <!-- Blood drip animations will be added here -->
+        </div>
+    </div>
+    
+    <!-- Game Board Screen -->
+    <div id="game-board-screen" class="screen">
+        <div class="game-container">
+            <div id="unit-roster" class="side-panel">
+                <h3>Units</h3>
+                <!-- Unit roster will be populated here -->
+            </div>
+            <div class="board-container" style="position: relative;">
+                <div id="game-board" class="game-board">
+                    <!-- Game board will be generated here -->
+                </div>
+                <div id="pause-overlay" class="pause-overlay" style="display: none;">
+                    <span class="pause-text">PAUSED</span>
+                </div>
+            </div>
+            <div class="side-panel">
+                <h3>Battle Log</h3>
+                <div id="battle-log">
+                    <!-- Battle log entries will be added here -->
+                </div>
+            </div>
+        </div>
+        <div class="game-controls">
+            <div class="pacing-controls">
+                <button class="pixel-button pace-btn" data-pace="pause">Pause</button>
+                <button class="pixel-button pace-btn" data-pace="1">1x</button>
+                <button class="pixel-button pace-btn" data-pace="1.5">1.5x</button>
+                <button class="pixel-button pace-btn" data-pace="2">2x</button>
+            </div>
+            <button id="end-deployment" class="pixel-button">End Deployment</button>
+            <button id="return-to-menu" class="pixel-button">Return to Menu</button>
+        </div>
+    </div>
+    
+    <!-- Scripts -->
+    <script src="core/state.js"></script>
+    <script src="core/board.js"></script>
+    <script src="core/pacing.js"></script>
+    <script src="core/battleLogText.js"></script>
+    <script src="core/movement.js"></script>
+    <script src="core/battle.js"></script>
+    <script src="core/deploy.js"></script>
+    <script src="core/units.js"></script>
+    <script src="core/projectiles.js"></script>
+    <script src="core/renderer.js"></script>
+    <script src="ui/ui.js"></script>
+    <script src="ui/controls.js"></script>
+    <script src="ui/effects.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

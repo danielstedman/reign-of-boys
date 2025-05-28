@@ -36,17 +36,21 @@ const Deploy = {
         // Get units for current faction
         const factionUnits = Units.getUnitsByFaction(GameState.currentPlayer);
         
+        // Track expanded card (for accordion behavior)
+        let expandedIndex = null;
+        
         // Create unit selection buttons
-        factionUnits.forEach(unitType => {
+        factionUnits.forEach((unitType, idx) => {
             const unitButton = document.createElement('div');
             unitButton.className = 'unit-selection';
+            unitButton.tabIndex = 0;
             
             // Get sprite path
             const spritePath = Renderer.assetPaths.units[GameState.currentPlayer][unitType.type];
-            
             // Get special abilities
             const specialAbilities = Units.getUnitSpecialAbilities(GameState.currentPlayer, unitType.type);
-            
+
+            // Collapsed content (always shown)
             unitButton.innerHTML = `
                 <div class="unit-icon ${GameState.currentPlayer.toLowerCase()}">
                     ${spritePath ? `<img src="${spritePath}" alt="${unitType.type}" class="unit-sprite">` : unitType.icon || unitType.type[0]}
@@ -54,30 +58,53 @@ const Deploy = {
                 <div class="unit-info">
                     <div class="unit-name">${unitType.type}</div>
                     <div class="unit-cost">Cost: ${unitType.cost} pts</div>
-                    <div class="unit-stats">
-                        HP: ${unitType.health} | ATK: ${unitType.attack} | DEF: ${unitType.defense || 0} | SPD: ${unitType.moveSpeed}
-                    </div>
-                    ${specialAbilities ? `
-                        <div class="unit-special">
-                            <span class="special-name">${specialAbilities.name}:</span>
-                            <span class="special-desc">${specialAbilities.description}</span>
+                    <button class="expand-toggle" aria-label="Show more info">&#x25BC;</button>
+                    <div class="unit-details" style="display:none">
+                        <div class="unit-stats">
+                            HP: ${unitType.health} | ATK: ${unitType.attack} | DEF: ${unitType.defense || 0} | SPD: ${unitType.moveSpeed}
                         </div>
-                    ` : ''}
-                    <div class="unit-desc">${unitType.description}</div>
+                        ${specialAbilities ? `
+                            <div class="unit-special">
+                                <span class="special-name">${specialAbilities.name}:</span>
+                                <span class="special-desc">${specialAbilities.description}</span>
+                            </div>
+                        ` : ''}
+                        <div class="unit-desc">${unitType.description}</div>
+                    </div>
                 </div>
             `;
-            
-            // Add click event to select unit
-            unitButton.addEventListener('click', () => {
-                this.selectUnitType(unitType);
-                
-                // Highlight selected unit
-                document.querySelectorAll('.unit-selection').forEach(el => {
-                    el.classList.remove('selected');
+
+            // Toggle expand/collapse for mobile (accordion style)
+            const expandBtn = unitButton.querySelector('.expand-toggle');
+            const detailsDiv = unitButton.querySelector('.unit-details');
+            expandBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                // Collapse all others
+                unitRoster.querySelectorAll('.unit-selection').forEach((el, i) => {
+                    if (i !== idx) {
+                        el.classList.remove('expanded');
+                        el.querySelector('.unit-details').style.display = 'none';
+                        el.querySelector('.expand-toggle').innerHTML = '&#x25BC;';
+                    }
                 });
-                unitButton.classList.add('selected');
+                // Toggle this one
+                const isExpanded = unitButton.classList.toggle('expanded');
+                detailsDiv.style.display = isExpanded ? '' : 'none';
+                expandBtn.innerHTML = isExpanded ? '&#x25B2;' : '&#x25BC;';
             });
-            
+
+            // Also allow clicking the card to select the unit
+            unitButton.addEventListener('click', (e) => {
+                // Only select if not clicking the expand button
+                if (!e.target.classList.contains('expand-toggle')) {
+                    this.selectUnitType(unitType);
+                    document.querySelectorAll('.unit-selection').forEach(el => {
+                        el.classList.remove('selected');
+                    });
+                    unitButton.classList.add('selected');
+                }
+            });
+
             unitRoster.appendChild(unitButton);
         });
     },
@@ -237,20 +264,16 @@ const Deploy = {
             return a.type.localeCompare(b.type);
         });
         
-        // Create unit elements
+        // Create unit elements (icon, name, health bar, and placeholder for effects)
         allUnits.forEach(unit => {
             const unitElement = document.createElement('div');
             unitElement.className = `battle-unit ${unit.faction.toLowerCase()}`;
             
             // Get sprite path
             const spritePath = Renderer.assetPaths.units[unit.faction][unit.type];
-            
             // Calculate health percentage
             const healthPercent = (unit.health / unit.maxHealth) * 100;
             const healthColor = Renderer.getHealthBarColor(healthPercent/100);
-            
-            // Get special abilities
-            const specialAbilities = Units.getUnitSpecialAbilities(unit.faction, unit.type);
             
             unitElement.innerHTML = `
                 <div class="unit-header">
@@ -259,15 +282,7 @@ const Deploy = {
                     </div>
                     <div class="unit-info">
                         <div class="unit-name">${unit.type} (${unit.faction})</div>
-                        <div class="unit-stats">
-                            ATK: ${unit.attack} | DEF: ${unit.defense || 0} | SPD: ${unit.moveSpeed}
-                        </div>
-                        ${specialAbilities ? `
-                            <div class="unit-special">
-                                <span class="special-name">${specialAbilities.name}:</span>
-                                <span class="special-desc">${specialAbilities.description}</span>
-                            </div>
-                        ` : ''}
+                        <!-- EFFECTS PLACEHOLDER: Add effect icons or text here if needed -->
                     </div>
                 </div>
                 <div class="health-bar-container">

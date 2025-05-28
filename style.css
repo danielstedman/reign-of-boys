@@ -637,6 +637,29 @@ body {
     }
 }
 
+/* Collapsible unit card styles for mobile */
+@media (max-width: 768px) {
+  .unit-selection .unit-details {
+    display: none;
+  }
+  .unit-selection.expanded .unit-details {
+    display: block !important;
+  }
+  .expand-toggle {
+    background: none;
+    border: none;
+    color: #ffcc00;
+    font-size: 1.1em;
+    cursor: pointer;
+    float: right;
+    margin-left: 8px;
+    padding: 0 4px;
+  }
+  .unit-selection .unit-cost {
+    display: inline-block;
+  }
+}
+
 /* Battle Unit Roster */
 .battle-unit {
     display: flex;
@@ -923,4 +946,96 @@ body {
 }
 .melee-attack-flash {
   animation: melee-attack-flash 0.15s;
+}
+
+/* Faction Selection Screen */
+#faction-selection-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+}
+
+.faction-selection {
+    display: flex;
+    gap: 2rem;
+    margin: 2rem 0;
+    width: 100%;
+    max-width: 1200px;
+}
+
+.faction-option {
+    flex: 1;
+    padding: 2rem;
+    border: 2px solid #666;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.faction-option:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.faction-option.selected {
+    border-color: #ffcc00;
+    box-shadow: 0 0 20px rgba(255, 204, 0, 0.3);
+}
+
+.faction-option h3 {
+    color: #ffcc00;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+}
+
+.faction-description {
+    color: #ccc;
+    margin-bottom: 1.5rem;
+    line-height: 1.4;
+}
+
+.faction-units {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 0.5rem;
+}
+
+.faction-units div {
+    padding: 0.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+.selection-controls {
+    margin-top: 2rem;
+}
+
+#confirm-faction:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Faction-specific colors */
+.faction-option[data-faction="Crown"] {
+    border-color: #4169e1;
+}
+
+.faction-option[data-faction="Crown"]:hover,
+.faction-option[data-faction="Crown"].selected {
+    border-color: #ffcc00;
+    box-shadow: 0 0 20px rgba(65, 105, 225, 0.3);
+}
+
+.faction-option[data-faction="Horde"] {
+    border-color: #8b0000;
+}
+
+.faction-option[data-faction="Horde"]:hover,
+.faction-option[data-faction="Horde"].selected {
+    border-color: #ffcc00;
+    box-shadow: 0 0 20px rgba(139, 0, 0, 0.3);
 }
